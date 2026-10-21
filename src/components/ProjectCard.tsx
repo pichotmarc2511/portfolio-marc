@@ -161,7 +161,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
         </motion.div>
       </div>
 
-      <div className="flex min-w-0 flex-col justify-center overflow-hidden">
+      <div className="flex min-w-0 flex-col justify-center">
         <div className="font-display text-sm font-medium tracking-widest uppercase" style={{ color: p.accent }}>
           0{index + 1}
         </div>
@@ -240,7 +240,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
               href={p.link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-black transition hover:scale-105 sm:ml-auto sm:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-black shadow-md transition hover:brightness-110 hover:shadow-lg active:scale-[0.98] sm:ml-auto sm:w-auto"
               style={{ background: p.accent }}
             >
               {t.work.open} <span aria-hidden>↗</span>

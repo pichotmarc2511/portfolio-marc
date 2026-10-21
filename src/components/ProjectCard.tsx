@@ -16,9 +16,15 @@ function eventThumbAspect(src: string): string {
   return "2 / 3";
 }
 
-function EventPhotos({ images, name }: { images: string[]; name: string }) {
+function EventPhotos({ images, name, stack }: { images: string[]; name: string; stack?: boolean }) {
   return (
-    <div className="grid w-full min-w-0 max-w-full grid-cols-2 gap-2 sm:flex sm:max-w-[220px] sm:flex-col sm:gap-3 md:max-w-[240px]">
+    <div
+      className={
+        stack
+          ? "grid w-full min-w-0 max-w-full grid-cols-2 gap-2 sm:flex sm:max-w-[200px] sm:flex-col sm:gap-3"
+          : "grid w-full min-w-0 max-w-full grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5"
+      }
+    >
       {images.map((imgSrc) => (
         <a
           key={imgSrc}
@@ -81,18 +87,16 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
         style={{ background: `radial-gradient(40% 40% at ${flip ? "20%" : "80%"} 30%, ${p.accent}55, transparent)` }}
       />
 
-      <div
-        className={`flex min-w-0 flex-col overflow-hidden ${flip ? "lg:order-2 lg:items-end" : "lg:items-start"} [perspective:1200px]`}
-      >
+      <div className={`min-w-0 overflow-hidden ${flip ? "lg:order-2" : ""} [perspective:1200px]`}>
         <motion.div
           onPointerMove={onMove}
           onPointerLeave={onLeave}
           style={tilt3d ? { rotateX, rotateY, transformStyle: "preserve-3d" } : undefined}
-          className={`relative max-w-full ${p.phone ? "w-full max-w-[280px]" : "w-full"}`}
+          className="relative max-w-full"
         >
           <div
-            className={`relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-2xl ${
-              p.phone ? "mx-auto aspect-[9/19] w-full max-w-[280px] lg:mx-0" : "aspect-[16/10] w-full"
+            className={`relative mx-auto overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-2xl ${
+              p.phone ? "aspect-[9/19] max-w-[280px]" : "aspect-[16/10] w-full"
             }`}
             style={{ boxShadow: `0 30px 80px -20px ${p.accent}55` }}
           >
@@ -204,7 +208,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
                   </summary>
                   {ev.images && (
                     <div className="border-t border-white/10 px-4 pb-4 pt-3">
-                      <EventPhotos images={ev.images} name={ev.name} />
+                      <EventPhotos images={ev.images} name={ev.name} stack={ev.images.length === 2} />
                     </div>
                   )}
                 </details>
@@ -217,7 +221,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
                   <p className="mt-1 max-w-3xl text-xs leading-relaxed text-white/60">{ev.detail}</p>
                   {ev.images && (
                     <div className="mt-3 max-w-full overflow-hidden">
-                      <EventPhotos images={ev.images} name={ev.name} />
+                      <EventPhotos images={ev.images} name={ev.name} stack={ev.images.length === 2} />
                     </div>
                   )}
                 </div>

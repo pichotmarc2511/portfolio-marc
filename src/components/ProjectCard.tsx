@@ -16,26 +16,57 @@ function eventThumbAspect(src: string): string {
   return "2 / 3";
 }
 
-function EventPhotos({ images, name, stack }: { images: string[]; name: string; stack?: boolean }) {
+function EventThumb({ imgSrc, name }: { imgSrc: string; name: string }) {
   return (
-    <div
-      className={
-        stack
-          ? "grid w-full min-w-0 max-w-full grid-cols-2 gap-2 sm:flex sm:max-w-[200px] sm:flex-col sm:gap-3"
-          : "grid w-full min-w-0 max-w-full grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5"
-      }
+    <a
+      href={imgSrc}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="relative block w-full overflow-hidden rounded-lg border border-white/10 transition hover:scale-[1.02]"
+      style={{ aspectRatio: eventThumbAspect(imgSrc) }}
     >
+      <Image src={imgSrc} alt={name} fill sizes="(max-width:640px) 42vw, 180px" className="object-cover" loading="lazy" />
+    </a>
+  );
+}
+
+function EventPhotos({ images, name }: { images: string[]; name: string }) {
+  const cartes = images.filter((src) => src.includes("carte"));
+  const others = images.filter((src) => !src.includes("carte"));
+
+  // Foire de Libramont : cartes recto/verso empilées + affiches A3 à côté
+  if (cartes.length > 0 && others.length > 0) {
+    return (
+      <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-start">
+        <div className="flex w-full max-w-[168px] shrink-0 flex-col gap-2">
+          {cartes.map((imgSrc) => (
+            <EventThumb key={imgSrc} imgSrc={imgSrc} name={name} />
+          ))}
+        </div>
+        <div className="grid min-w-0 flex-1 grid-cols-2 gap-2 sm:grid-cols-3">
+          {others.map((imgSrc) => (
+            <EventThumb key={imgSrc} imgSrc={imgSrc} name={name} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Mind & Market : 2 flyers l’un sous l’autre (desktop)
+  if (images.length === 2) {
+    return (
+      <div className="grid w-full min-w-0 grid-cols-2 gap-2 sm:flex sm:max-w-[200px] sm:flex-col sm:gap-3">
+        {images.map((imgSrc) => (
+          <EventThumb key={imgSrc} imgSrc={imgSrc} name={name} />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid w-full min-w-0 max-w-full grid-cols-2 gap-2 sm:grid-cols-3">
       {images.map((imgSrc) => (
-        <a
-          key={imgSrc}
-          href={imgSrc}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="relative block w-full overflow-hidden rounded-lg border border-white/10 transition hover:scale-[1.02]"
-          style={{ aspectRatio: eventThumbAspect(imgSrc) }}
-        >
-          <Image src={imgSrc} alt={name} fill sizes="(max-width:640px) 42vw, 160px" className="object-cover" loading="lazy" />
-        </a>
+        <EventThumb key={imgSrc} imgSrc={imgSrc} name={name} />
       ))}
     </div>
   );
@@ -208,7 +239,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
                   </summary>
                   {ev.images && (
                     <div className="border-t border-white/10 px-4 pb-4 pt-3">
-                      <EventPhotos images={ev.images} name={ev.name} stack={ev.images.length === 2} />
+                      <EventPhotos images={ev.images} name={ev.name} />
                     </div>
                   )}
                 </details>
@@ -221,7 +252,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
                   <p className="mt-1 max-w-3xl text-xs leading-relaxed text-white/60">{ev.detail}</p>
                   {ev.images && (
                     <div className="mt-3 max-w-full overflow-hidden">
-                      <EventPhotos images={ev.images} name={ev.name} stack={ev.images.length === 2} />
+                      <EventPhotos images={ev.images} name={ev.name} />
                     </div>
                   )}
                 </div>

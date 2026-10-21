@@ -3,7 +3,7 @@ export type Lang = "fr" | "en";
 export const CONTACT = {
   email: "pichotmarc2511@gmail.com",
   // TODO: ajoute ton GitHub / LinkedIn ici (laisse "" pour masquer le bouton)
-  github: "",
+  github: "https://github.com/pichotmarc2511/portfolio-marc",
   linkedin: "",
 };
 

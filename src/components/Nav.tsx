@@ -1,12 +1,12 @@
 "use client";
 
-import { motion, useScroll, useSpring } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { useLang } from "./LangProvider";
 
 export function Nav() {
   const { t, lang, setLang } = useLang();
   const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 24 });
+  const scaleX = useTransform(scrollYProgress, (v) => v);
 
   const links = [
     ["#projets", t.nav.work],
@@ -17,7 +17,7 @@ export function Nav() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
-      <div className="glass mx-auto mt-3 flex max-w-6xl items-center justify-between rounded-full px-5 py-2.5">
+      <div className="glass-nav mx-auto mt-3 flex max-w-6xl items-center justify-between rounded-full px-5 py-2.5">
         <a href="#top" className="font-display text-sm font-semibold tracking-tight">
           <span className="gradient-text">MP</span>
           <span className="text-white/60">.dev</span>

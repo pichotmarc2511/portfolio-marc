@@ -18,7 +18,7 @@ function Title({ kicker, title, sub }: { kicker?: string; title: string; sub?: s
 export function Work() {
   const { t } = useLang();
   return (
-    <section id="projets" className="mx-auto max-w-6xl px-6 py-28">
+    <section id="projets" className="section-block mx-auto max-w-6xl px-6 py-28">
       <Title title={t.work.title} sub={t.work.sub} />
       <div className="space-y-10">
         {t.projects.map((p, i) => (
@@ -32,12 +32,12 @@ export function Work() {
 export function Method() {
   const { t } = useLang();
   return (
-    <section id="methode" className="mx-auto max-w-6xl px-6 py-28">
+    <section id="methode" className="section-block mx-auto max-w-6xl px-6 py-28">
       <Title title={t.method.title} sub={t.method.sub} />
       <div className="grid gap-4 md:grid-cols-5">
         {t.method.steps.map((s, i) => (
           <Reveal key={s.n} delay={i * 0.08}>
-            <div className="glass group relative h-full overflow-hidden rounded-2xl p-6 transition hover:-translate-y-1 hover:bg-white/[0.07]">
+            <div className="glass-panel group relative h-full overflow-hidden rounded-2xl p-6 transition hover:-translate-y-1 hover:bg-white/[0.07]">
               <div className="font-display text-5xl font-bold text-white/10 transition group-hover:text-violet-300/40">{s.n}</div>
               <h3 className="font-display mt-6 text-xl font-semibold">{s.t}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/60">{s.d}</p>
@@ -51,7 +51,7 @@ export function Method() {
         <div className="grid gap-4 sm:grid-cols-2">
           {t.method.rules.map((r, i) => (
             <Reveal key={r.t} delay={i * 0.08}>
-              <div className="glass flex h-full gap-4 rounded-2xl p-6">
+              <div className="glass-panel flex h-full gap-4 rounded-2xl p-6">
                 <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-violet-500 to-sky-500 font-display text-sm font-bold">
                   {i + 1}
                 </div>
@@ -71,7 +71,7 @@ export function Method() {
 export function Path() {
   const { t } = useLang();
   return (
-    <section id="parcours" className="mx-auto max-w-4xl px-6 py-28">
+    <section id="parcours" className="section-block mx-auto max-w-4xl px-6 py-28">
       <Title title={t.path.title} />
       <div className="relative border-l border-white/15 pl-8">
         {t.path.items.map((it, i) => (
@@ -96,10 +96,10 @@ export function Contact() {
   ].filter(Boolean) as string[][];
 
   return (
-    <section id="contact" className="mx-auto max-w-5xl px-6 pb-24 pt-28">
+    <section id="contact" className="section-block mx-auto max-w-5xl px-6 pb-24 pt-28">
       <Reveal>
-        <div className="glass glow-border relative overflow-hidden rounded-[2rem] p-10 text-center sm:p-16">
-          <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_50%_0%,#7c5cff33,transparent)]" />
+        <div className="glass-panel glow-border relative overflow-hidden rounded-[2rem] p-10 text-center sm:p-16">
+          <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_50%_0%,#7c5cff28,transparent)]" />
           <h2 className="font-display text-4xl font-bold tracking-tight sm:text-6xl">{t.contact.title}</h2>
           <p className="mx-auto mt-5 max-w-xl text-lg text-white/65">{t.contact.sub}</p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
@@ -115,7 +115,7 @@ export function Contact() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass rounded-full px-8 py-4 text-sm font-semibold transition hover:bg-white/10"
+                className="glass-panel rounded-full px-8 py-4 text-sm font-semibold transition hover:bg-white/10"
               >
                 {label} ↗
               </a>

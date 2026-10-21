@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Counter } from "./Counter";
 import { useLang } from "./LangProvider";
 import type { Content } from "@/lib/content";
@@ -19,8 +19,18 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
   const rotateY = useTransform(sx, [-0.5, 0.5], [-9, 9]);
   const rotateX = useTransform(sy, [-0.5, 0.5], [7, -7]);
   const flip = index % 2 === 1;
+  const [tilt3d, setTilt3d] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px) and (pointer: fine)");
+    const sync = () => setTilt3d(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!tilt3d) return;
     const r = e.currentTarget.getBoundingClientRect();
     mx.set((e.clientX - r.left) / r.width - 0.5);
     my.set((e.clientY - r.top) / r.height - 0.5);
@@ -36,7 +46,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      className="glass glow-border relative grid gap-8 overflow-hidden rounded-[2rem] p-6 sm:p-10 lg:grid-cols-2 lg:gap-12"
+      className="glass glow-border relative grid min-w-0 max-w-full gap-8 overflow-hidden rounded-[2rem] p-6 sm:p-10 lg:grid-cols-2 lg:gap-12"
       style={{ ["--glow" as string]: p.accent }}
     >
       <div
@@ -45,12 +55,12 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
         style={{ background: `radial-gradient(40% 40% at ${flip ? "20%" : "80%"} 30%, ${p.accent}55, transparent)` }}
       />
 
-      <div className={`${flip ? "lg:order-2" : ""} [perspective:1200px]`}>
+      <div className={`min-w-0 overflow-hidden ${flip ? "lg:order-2" : ""} [perspective:1200px]`}>
         <motion.div
           onPointerMove={onMove}
           onPointerLeave={onLeave}
-          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-          className="relative"
+          style={tilt3d ? { rotateX, rotateY, transformStyle: "preserve-3d" } : undefined}
+          className="relative max-w-full"
         >
           <div
             className={`relative mx-auto overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-2xl ${
@@ -88,7 +98,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
         </motion.div>
       </div>
 
-      <div className="flex flex-col justify-center">
+      <div className="flex min-w-0 flex-col justify-center">
         <div className="font-display text-sm font-medium tracking-widest uppercase" style={{ color: p.accent }}>
           0{index + 1}
         </div>
@@ -109,18 +119,18 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
         </ul>
 
         {p.events && (
-          <div className="mt-6">
+          <div className="mt-6 min-w-0">
             <div className="text-xs font-semibold tracking-widest text-white/40 uppercase">{t.work.events}</div>
-            <div className="mt-2 grid gap-3 sm:grid-cols-2">
+            <div className="mt-2 grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-2">
               {p.events.map((ev) => (
-                <div key={ev.name} className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <div key={ev.name} className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4">
                   <div className="text-xs font-semibold tracking-wide" style={{ color: p.accent }}>
                     {ev.when}
                   </div>
                   <div className="font-display mt-0.5 text-sm font-semibold">{ev.name}</div>
                   <p className="mt-1 text-xs leading-relaxed text-white/60">{ev.detail}</p>
                   {ev.images && (
-                    <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+                    <div className="mt-3 flex max-w-full min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-1 [-webkit-overflow-scrolling:touch]">
                       {ev.images.map((imgSrc) => (
                         <a
                           key={imgSrc}
@@ -157,9 +167,9 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
           ))}
         </div>
 
-        <div className="mt-7 flex flex-wrap items-center gap-6">
+        <div className="mt-7 flex min-w-0 flex-wrap items-center gap-4 sm:gap-6">
           {p.facts.map((f) => (
-            <div key={f.label}>
+            <div key={f.label} className="min-w-[5.5rem]">
               <div className="font-display text-3xl font-bold">
                 <Counter to={f.value} suffix={f.suffix} />
               </div>
@@ -171,7 +181,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
               href={p.link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-auto inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-black transition hover:scale-105"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-black transition hover:scale-105 sm:ml-auto sm:w-auto"
               style={{ background: p.accent }}
             >
               {t.work.open} <span aria-hidden>↗</span>

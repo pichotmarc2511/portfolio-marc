@@ -18,9 +18,9 @@ function Title({ kicker, title, sub }: { kicker?: string; title: string; sub?: s
 export function Work() {
   const { t } = useLang();
   return (
-    <section id="projets" className="mx-auto max-w-6xl px-6 py-28">
+    <section id="projets" className="mx-auto max-w-6xl overflow-x-clip px-6 py-28">
       <Title title={t.work.title} sub={t.work.sub} />
-      <div className="space-y-10">
+      <div className="min-w-0 space-y-10">
         {t.projects.map((p, i) => (
           <ProjectCard key={p.id} p={p} index={i} />
         ))}

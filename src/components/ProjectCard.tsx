@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import Image from "next/image";
 import { useState } from "react";
 import { Counter } from "./Counter";
@@ -12,56 +12,65 @@ type P = Content["projects"][number];
 export function ProjectCard({ p, index }: { p: P; index: number }) {
   const { t } = useLang();
   const [active, setActive] = useState(0);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 120, damping: 18 });
+  const sy = useSpring(my, { stiffness: 120, damping: 18 });
+  const rotateY = useTransform(sx, [-0.5, 0.5], [-9, 9]);
+  const rotateX = useTransform(sy, [-0.5, 0.5], [7, -7]);
   const flip = index % 2 === 1;
-  const src = p.images[active] ?? p.images[0];
+
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
+  };
+  const onLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 48 }}
+      initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -4 }}
-      className="glass-panel glow-border group relative grid gap-8 overflow-hidden rounded-[2rem] p-6 sm:p-10 lg:grid-cols-2 lg:gap-12"
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      className="glass glow-border relative grid gap-8 overflow-hidden rounded-[2rem] p-6 sm:p-10 lg:grid-cols-2 lg:gap-12"
       style={{ ["--glow" as string]: p.accent }}
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-12 -z-10 opacity-40 transition-opacity duration-500 group-hover:opacity-60"
-        style={{
-          background: `radial-gradient(50% 50% at ${flip ? "25%" : "75%"} 35%, ${p.accent}33, transparent)`,
-        }}
+        className="pointer-events-none absolute -inset-20 -z-10 opacity-30 blur-3xl"
+        style={{ background: `radial-gradient(40% 40% at ${flip ? "20%" : "80%"} 30%, ${p.accent}55, transparent)` }}
       />
 
-      <div className={`${flip ? "lg:order-2" : ""} [perspective:900px]`}>
+      <div className={`${flip ? "lg:order-2" : ""} [perspective:1200px]`}>
         <motion.div
-          className="relative transition-transform duration-500 ease-out [transform-style:preserve-3d] group-hover:[transform:rotateX(4deg)_rotateY(-4deg)]"
+          onPointerMove={onMove}
+          onPointerLeave={onLeave}
+          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+          className="relative"
         >
           <div
-            className={`relative mx-auto overflow-hidden rounded-2xl border border-white/10 bg-black/40 ${
+            className={`relative mx-auto overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-2xl ${
               p.phone ? "aspect-[9/19] max-w-[280px]" : "aspect-[16/10] w-full"
             }`}
-            style={{ boxShadow: `0 24px 64px -24px ${p.accent}66` }}
+            style={{ boxShadow: `0 30px 80px -20px ${p.accent}55` }}
           >
-            <AnimatePresence mode="wait">
-              <motion.div
+            {p.images.map((src, i) => (
+              <Image
                 key={src}
-                initial={{ opacity: 0, scale: 1.03 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src={src}
-                  alt={`${p.name} ${active + 1}`}
-                  fill
-                  sizes="(min-width:1024px) 40vw, 90vw"
-                  className={`object-cover ${p.phone ? "object-top" : ""}`}
-                  priority={index === 0 && active === 0}
-                />
-              </motion.div>
-            </AnimatePresence>
+                src={src}
+                alt={`${p.name} ${i + 1}`}
+                fill
+                sizes="(min-width:1024px) 40vw, 90vw"
+                className={`object-cover transition-all duration-700 ${
+                  i === active ? "scale-100 opacity-100" : "scale-105 opacity-0"
+                } ${p.phone ? "object-top" : ""}`}
+                priority={index === 0 && i === 0}
+              />
+            ))}
           </div>
           {p.images.length > 1 && (
             <div className="mt-4 flex justify-center gap-2">
@@ -70,7 +79,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
                   key={i}
                   onClick={() => setActive(i)}
                   aria-label={`${p.name} ${i + 1}`}
-                  className="h-1.5 rounded-full transition-all duration-300"
+                  className="h-1.5 rounded-full transition-all"
                   style={{ width: i === active ? 32 : 10, background: i === active ? p.accent : "#ffffff30" }}
                 />
               ))}

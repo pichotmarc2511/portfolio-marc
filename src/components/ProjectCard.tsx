@@ -25,26 +25,25 @@ function EventThumb({ imgSrc, name }: { imgSrc: string; name: string }) {
       className="relative block w-full overflow-hidden rounded-lg border border-white/10 transition hover:scale-[1.02]"
       style={{ aspectRatio: eventThumbAspect(imgSrc) }}
     >
-      <Image src={imgSrc} alt={name} fill sizes="(max-width:640px) 42vw, 180px" className="object-cover" loading="lazy" />
+      <Image src={imgSrc} alt={name} fill sizes="(max-width:640px) 42vw, 160px" className="object-cover" loading="lazy" />
     </a>
   );
 }
 
 function EventPhotos({ images, name }: { images: string[]; name: string }) {
   const cartes = images.filter((src) => src.includes("carte"));
-  const others = images.filter((src) => !src.includes("carte"));
+  const posters = images.filter((src) => !src.includes("carte"));
 
-  // Foire de Libramont : cartes recto/verso empilées + affiches A3 à côté
-  if (cartes.length > 0 && others.length > 0) {
+  if (cartes.length > 0 && posters.length > 0) {
     return (
       <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-start">
-        <div className="flex w-full max-w-[168px] shrink-0 flex-col gap-2">
+        <div className="flex w-full max-w-[132px] shrink-0 flex-col gap-2">
           {cartes.map((imgSrc) => (
             <EventThumb key={imgSrc} imgSrc={imgSrc} name={name} />
           ))}
         </div>
         <div className="grid min-w-0 flex-1 grid-cols-2 gap-2 sm:grid-cols-3">
-          {others.map((imgSrc) => (
+          {posters.map((imgSrc) => (
             <EventThumb key={imgSrc} imgSrc={imgSrc} name={name} />
           ))}
         </div>
@@ -52,23 +51,29 @@ function EventPhotos({ images, name }: { images: string[]; name: string }) {
     );
   }
 
-  // Mind & Market : 2 flyers l’un sous l’autre (desktop)
-  if (images.length === 2) {
-    return (
-      <div className="grid w-full min-w-0 grid-cols-2 gap-2 sm:flex sm:max-w-[200px] sm:flex-col sm:gap-3">
-        {images.map((imgSrc) => (
-          <EventThumb key={imgSrc} imgSrc={imgSrc} name={name} />
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div className="grid w-full min-w-0 max-w-full grid-cols-2 gap-2 sm:grid-cols-3">
+    <div className="grid w-full min-w-0 grid-cols-2 gap-2">
       {images.map((imgSrc) => (
         <EventThumb key={imgSrc} imgSrc={imgSrc} name={name} />
       ))}
     </div>
+  );
+}
+
+function EventBlock({ ev, accent, t }: { ev: NonNullable<P["events"]>[number]; accent: string; t: Content["work"] }) {
+  return (
+    <>
+      <div className="text-xs font-semibold tracking-wide" style={{ color: accent }}>
+        {ev.when}
+      </div>
+      <div className="font-display mt-0.5 text-sm font-semibold leading-snug">{ev.name}</div>
+      <p className="mt-1 text-xs leading-relaxed text-white/60">{ev.detail}</p>
+      {ev.images && (
+        <div className="mt-3 min-w-0">
+          <EventPhotos images={ev.images} name={ev.name} />
+        </div>
+      )}
+    </>
   );
 }
 
@@ -109,7 +114,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      className="glass glow-border relative grid w-full min-w-0 max-w-full grid-cols-1 gap-8 overflow-hidden rounded-[2rem] p-4 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-12"
+      className="glass glow-border relative grid w-full min-w-0 max-w-full gap-8 overflow-hidden rounded-[2rem] p-4 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-12"
       style={{ ["--glow" as string]: p.accent }}
     >
       <div
@@ -161,7 +166,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
         </motion.div>
       </div>
 
-      <div className="flex min-w-0 flex-col justify-center">
+      <div className="flex min-w-0 flex-col justify-center overflow-hidden">
         <div className="font-display text-sm font-medium tracking-widest uppercase" style={{ color: p.accent }}>
           0{index + 1}
         </div>
@@ -180,6 +185,43 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
             </li>
           ))}
         </ul>
+
+        {p.events && (
+          <div className="mt-6 w-full min-w-0">
+            <div className="text-xs font-semibold tracking-widest text-white/40 uppercase">{t.work.events}</div>
+            <ul className="mt-3 space-y-3">
+              {p.events.map((ev) => (
+                <li key={ev.name} className="min-w-0">
+                  <details className="group rounded-xl border border-white/10 bg-white/5 open:pb-0 sm:hidden">
+                    <summary className="cursor-pointer list-none p-4 [&::-webkit-details-marker]:hidden">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="text-xs font-semibold tracking-wide" style={{ color: p.accent }}>
+                            {ev.when}
+                          </div>
+                          <div className="font-display mt-0.5 text-sm font-semibold leading-snug">{ev.name}</div>
+                        </div>
+                        {ev.images && (
+                          <span className="shrink-0 rounded-full border border-white/15 px-2 py-0.5 text-[10px] text-white/55">
+                            {ev.images.length} {t.work.eventPhotos}
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-2 text-xs leading-relaxed text-white/60">{ev.detail}</p>
+                    </summary>
+                    <div className="border-t border-white/10 px-4 pb-4 pt-3">
+                      {ev.images && <EventPhotos images={ev.images} name={ev.name} />}
+                    </div>
+                  </details>
+
+                  <div className="hidden rounded-xl border border-white/10 bg-white/5 p-4 sm:block">
+                    <EventBlock ev={ev} accent={p.accent} t={t.work} />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="mt-6 flex flex-wrap gap-2">
           {p.stack.map((s) => (
@@ -211,56 +253,6 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
           )}
         </div>
       </div>
-
-      {p.events && (
-        <div className="min-w-0 lg:col-span-2">
-          <div className="text-xs font-semibold tracking-widest text-white/40 uppercase">{t.work.events}</div>
-          <ul className="mt-3 space-y-3">
-            {p.events.map((ev) => (
-              <li key={ev.name} className="min-w-0 max-w-full">
-                <details className="group rounded-xl border border-white/10 bg-white/5 sm:hidden">
-                  <summary className="cursor-pointer list-none p-4 [&::-webkit-details-marker]:hidden">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <div className="text-xs font-semibold tracking-wide" style={{ color: p.accent }}>
-                          {ev.when}
-                        </div>
-                        <div className="font-display mt-0.5 text-sm font-semibold leading-snug">{ev.name}</div>
-                      </div>
-                      {ev.images && (
-                        <span className="shrink-0 rounded-full border border-white/15 px-2 py-0.5 text-[10px] text-white/55">
-                          {ev.images.length} {t.work.eventPhotos}
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-2 text-xs leading-relaxed text-white/60">{ev.detail}</p>
-                    <span className="mt-2 inline-block text-[11px] font-medium text-white/45 group-open:hidden">▼</span>
-                    <span className="mt-2 hidden text-[11px] font-medium text-white/45 group-open:inline">▲</span>
-                  </summary>
-                  {ev.images && (
-                    <div className="border-t border-white/10 px-4 pb-4 pt-3">
-                      <EventPhotos images={ev.images} name={ev.name} />
-                    </div>
-                  )}
-                </details>
-
-                <div className="hidden min-w-0 max-w-full rounded-xl border border-white/10 bg-white/5 p-4 sm:block">
-                  <div className="text-xs font-semibold tracking-wide" style={{ color: p.accent }}>
-                    {ev.when}
-                  </div>
-                  <div className="font-display mt-0.5 text-sm font-semibold">{ev.name}</div>
-                  <p className="mt-1 max-w-3xl text-xs leading-relaxed text-white/60">{ev.detail}</p>
-                  {ev.images && (
-                    <div className="mt-3 max-w-full overflow-hidden">
-                      <EventPhotos images={ev.images} name={ev.name} />
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </motion.article>
   );
 }

@@ -18,7 +18,7 @@ function eventThumbAspect(src: string): string {
 
 function EventPhotos({ images, name }: { images: string[]; name: string }) {
   return (
-    <div className="grid w-full min-w-0 max-w-full grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+    <div className="grid w-full min-w-0 max-w-full grid-cols-2 gap-2 sm:flex sm:max-w-[220px] sm:flex-col sm:gap-3 md:max-w-[240px]">
       {images.map((imgSrc) => (
         <a
           key={imgSrc}
@@ -81,16 +81,18 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
         style={{ background: `radial-gradient(40% 40% at ${flip ? "20%" : "80%"} 30%, ${p.accent}55, transparent)` }}
       />
 
-      <div className={`min-w-0 overflow-hidden ${flip ? "lg:order-2" : ""} [perspective:1200px]`}>
+      <div
+        className={`flex min-w-0 flex-col overflow-hidden ${flip ? "lg:order-2 lg:items-end" : "lg:items-start"} [perspective:1200px]`}
+      >
         <motion.div
           onPointerMove={onMove}
           onPointerLeave={onLeave}
           style={tilt3d ? { rotateX, rotateY, transformStyle: "preserve-3d" } : undefined}
-          className="relative max-w-full"
+          className={`relative max-w-full ${p.phone ? "w-full max-w-[280px]" : "w-full"}`}
         >
           <div
-            className={`relative mx-auto overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-2xl ${
-              p.phone ? "aspect-[9/19] max-w-[280px]" : "aspect-[16/10] w-full"
+            className={`relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-2xl ${
+              p.phone ? "mx-auto aspect-[9/19] w-full max-w-[280px] lg:mx-0" : "aspect-[16/10] w-full"
             }`}
             style={{ boxShadow: `0 30px 80px -20px ${p.accent}55` }}
           >

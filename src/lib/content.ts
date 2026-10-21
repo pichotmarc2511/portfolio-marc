@@ -119,7 +119,11 @@ export const content: Record<Lang, Content> = {
           { name: "Mind & Market, Marche-en-Famenne", when: "18 juin 2026", images: ["/img/events/flyer-recto.webp", "/img/events/flyer-verso.webp"], detail: "Pitch devant un jury de professionnels, dont des responsables de la Foire de Libramont, évalué sur 8 critères (innovation, marché, faisabilité technique et financière, impact, clarté, communication). Stand dans la Test Arena et questionnaire de retour utilisateurs pour prioriser les fonctionnalités et les tarifs." },
           { name: "Foire de Libramont", when: "26 juillet 2026", images: ["/img/events/carte-recto.webp", "/img/events/carte-verso.webp", "/img/events/a3-testez.webp", "/img/events/a3-avis.webp", "/img/events/a3-pourquoi.webp"], detail: "Stand dans la Test Arena, toute la journée. Cartes de visite recto-verso et affiches A3 conçues pour le stand." },
         ],
-        images: ["/img/permaplanner-editor.webp", "/img/permaplanner-dashboard.webp"],
+        images: [
+          "/img/permaplanner-accueil.webp",
+          "/img/permaplanner-editor.webp",
+          "/img/permaplanner-premier-potager.webp",
+        ],
         accent: "#34d399",
       },
       {
@@ -273,7 +277,11 @@ export const content: Record<Lang, Content> = {
           { name: "Mind & Market, Marche-en-Famenne", when: "18 June 2026", images: ["/img/events/flyer-recto.webp", "/img/events/flyer-verso.webp"], detail: "Pitch in front of a jury of professionals, including managers of the Foire de Libramont, scored on 8 criteria (innovation, market, technical and financial feasibility, impact, clarity, communication). Stand in the Test Arena and a user feedback questionnaire to prioritise features and pricing." },
           { name: "Foire de Libramont", when: "26 July 2026", images: ["/img/events/carte-recto.webp", "/img/events/carte-verso.webp", "/img/events/a3-testez.webp", "/img/events/a3-avis.webp", "/img/events/a3-pourquoi.webp"], detail: "Stand in the Test Arena, all day. Double-sided business cards and A3 posters designed for the stand." },
         ],
-        images: ["/img/permaplanner-editor.webp", "/img/permaplanner-dashboard.webp"],
+        images: [
+          "/img/permaplanner-accueil.webp",
+          "/img/permaplanner-editor.webp",
+          "/img/permaplanner-premier-potager.webp",
+        ],
         accent: "#34d399",
       },
       {

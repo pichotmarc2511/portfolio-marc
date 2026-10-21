@@ -9,7 +9,7 @@ export default function Home() {
     <LangProvider>
       <Background />
       <Nav />
-      <main>
+      <main className="relative w-full overflow-x-clip">
         <Hero />
         <Work />
         <Method />

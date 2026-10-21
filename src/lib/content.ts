@@ -35,7 +35,15 @@ export type Content = {
   };
   stats: { value: number; suffix?: string; label: string }[];
   stackTitle: string;
-  work: { title: string; sub: string; problem: string; did: string; open: string; events: string };
+  work: {
+    title: string;
+    sub: string;
+    problem: string;
+    did: string;
+    open: string;
+    events: string;
+    eventPhotos: string;
+  };
   projects: Project[];
   method: {
     title: string;
@@ -84,6 +92,7 @@ export const content: Record<Lang, Content> = {
       problem: "Le besoin",
       did: "Ce que j'ai fait",
       events: "Sur le terrain",
+      eventPhotos: "visuels",
       open: "Voir le site",
     },
     projects: [
@@ -237,6 +246,7 @@ export const content: Record<Lang, Content> = {
       problem: "The need",
       did: "What I did",
       events: "In the field",
+      eventPhotos: "visuals",
       open: "Visit site",
     },
     projects: [

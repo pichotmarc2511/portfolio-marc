@@ -9,6 +9,32 @@ import type { Content } from "@/lib/content";
 
 type P = Content["projects"][number];
 
+function eventThumbAspect(src: string): string {
+  if (src.includes("carte")) return "3 / 2";
+  if (src.includes("a3-pourquoi")) return "2 / 3";
+  if (src.includes("flyer")) return "4 / 5";
+  return "2 / 3";
+}
+
+function EventPhotos({ images, name }: { images: string[]; name: string }) {
+  return (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+      {images.map((imgSrc) => (
+        <a
+          key={imgSrc}
+          href={imgSrc}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative block w-full overflow-hidden rounded-lg border border-white/10 transition hover:scale-[1.02]"
+          style={{ aspectRatio: eventThumbAspect(imgSrc) }}
+        >
+          <Image src={imgSrc} alt={name} fill sizes="(max-width:640px) 42vw, 160px" className="object-cover" loading="lazy" />
+        </a>
+      ))}
+    </div>
+  );
+}
+
 export function ProjectCard({ p, index }: { p: P; index: number }) {
   const { t } = useLang();
   const [active, setActive] = useState(0);
@@ -46,7 +72,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      className="glass glow-border relative grid min-w-0 max-w-full gap-8 overflow-hidden rounded-[2rem] p-6 sm:p-10 lg:grid-cols-2 lg:gap-12"
+      className="glass glow-border relative grid w-full min-w-0 max-w-full gap-8 overflow-hidden rounded-[2rem] p-4 sm:p-10 lg:grid-cols-2 lg:gap-12"
       style={{ ["--glow" as string]: p.accent }}
     >
       <div
@@ -102,11 +128,11 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
         <div className="font-display text-sm font-medium tracking-widest uppercase" style={{ color: p.accent }}>
           0{index + 1}
         </div>
-        <h3 className="font-display mt-2 text-4xl font-bold tracking-tight sm:text-5xl">{p.name}</h3>
-        <p className="mt-2 text-lg text-white/70">{p.tagline}</p>
+        <h3 className="font-display mt-2 break-words text-3xl font-bold tracking-tight sm:text-5xl">{p.name}</h3>
+        <p className="mt-2 break-words text-lg text-white/70">{p.tagline}</p>
 
         <div className="mt-6 text-xs font-semibold tracking-widest text-white/40 uppercase">{t.work.problem}</div>
-        <p className="mt-1 leading-relaxed text-white/75">{p.problem}</p>
+        <p className="mt-1 break-words leading-relaxed text-white/75">{p.problem}</p>
 
         <div className="mt-6 text-xs font-semibold tracking-widest text-white/40 uppercase">{t.work.did}</div>
         <ul className="mt-2 space-y-2 text-sm leading-relaxed text-white/75">
@@ -119,43 +145,56 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
         </ul>
 
         {p.events && (
-          <div className="mt-6 min-w-0">
+          <div className="mt-6 w-full min-w-0">
             <div className="text-xs font-semibold tracking-widest text-white/40 uppercase">{t.work.events}</div>
-            <div className="mt-2 grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-2">
+            <ul className="mt-3 space-y-3">
               {p.events.map((ev) => (
-                <div key={ev.name} className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div className="text-xs font-semibold tracking-wide" style={{ color: p.accent }}>
-                    {ev.when}
-                  </div>
-                  <div className="font-display mt-0.5 text-sm font-semibold">{ev.name}</div>
-                  <p className="mt-1 text-xs leading-relaxed text-white/60">{ev.detail}</p>
-                  {ev.images && (
-                    <div className="mt-3 flex max-w-full min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-1 [-webkit-overflow-scrolling:touch]">
-                      {ev.images.map((imgSrc) => (
-                        <a
-                          key={imgSrc}
-                          href={imgSrc}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="relative block h-28 shrink-0 overflow-hidden rounded-lg border border-white/10 transition hover:scale-[1.04]"
-                          style={{
-                            aspectRatio: imgSrc.includes("carte")
-                              ? "3 / 2"
-                              : imgSrc.includes("a3-pourquoi")
-                                ? "2 / 3"
-                                : imgSrc.includes("flyer")
-                                  ? "4 / 5"
-                                  : "2 / 3",
-                          }}
-                        >
-                          <Image src={imgSrc} alt={ev.name} fill sizes="120px" className="object-cover" loading="lazy" />
-                        </a>
-                      ))}
+                <li key={ev.name} className="min-w-0">
+                  <details className="group rounded-xl border border-white/10 bg-white/5 sm:hidden">
+                    <summary className="cursor-pointer list-none p-4 [&::-webkit-details-marker]:hidden">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="text-xs font-semibold tracking-wide" style={{ color: p.accent }}>
+                            {ev.when}
+                          </div>
+                          <div className="font-display mt-0.5 text-sm font-semibold leading-snug">{ev.name}</div>
+                        </div>
+                        {ev.images && (
+                          <span className="shrink-0 rounded-full border border-white/15 px-2 py-0.5 text-[10px] text-white/55">
+                            {ev.images.length} {t.work.eventPhotos}
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-2 text-xs leading-relaxed text-white/60">{ev.detail}</p>
+                      <span className="mt-2 inline-block text-[11px] font-medium text-white/45 group-open:hidden">
+                        ▼
+                      </span>
+                      <span className="mt-2 hidden text-[11px] font-medium text-white/45 group-open:inline">
+                        ▲
+                      </span>
+                    </summary>
+                    {ev.images && (
+                      <div className="border-t border-white/10 px-4 pb-4 pt-3">
+                        <EventPhotos images={ev.images} name={ev.name} />
+                      </div>
+                    )}
+                  </details>
+
+                  <div className="hidden min-w-0 rounded-xl border border-white/10 bg-white/5 p-4 sm:block">
+                    <div className="text-xs font-semibold tracking-wide" style={{ color: p.accent }}>
+                      {ev.when}
                     </div>
-                  )}
-                </div>
+                    <div className="font-display mt-0.5 text-sm font-semibold">{ev.name}</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">{ev.detail}</p>
+                    {ev.images && (
+                      <div className="mt-3">
+                        <EventPhotos images={ev.images} name={ev.name} />
+                      </div>
+                    )}
+                  </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         )}
 

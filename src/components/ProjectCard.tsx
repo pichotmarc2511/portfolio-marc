@@ -9,23 +9,18 @@ import type { Content } from "@/lib/content";
 
 type P = Content["projects"][number];
 
-function eventThumbAspect(src: string): string {
-  if (src.includes("carte")) return "3 / 2";
-  if (src.includes("a3-pourquoi")) return "2 / 3";
-  if (src.includes("flyer")) return "4 / 5";
-  return "2 / 3";
-}
-
-function EventThumb({ imgSrc, name }: { imgSrc: string; name: string }) {
+function EventThumb({ imgSrc, name, compact }: { imgSrc: string; name: string; compact?: boolean }) {
+  const tall = imgSrc.includes("flyer") || imgSrc.includes("a3");
+  const maxH = compact ? "max-h-[72px]" : tall ? "max-h-[200px] sm:max-h-[220px]" : "max-h-[88px] sm:max-h-[96px]";
   return (
     <a
       href={imgSrc}
       target="_blank"
       rel="noopener noreferrer"
-      className="relative block w-full overflow-hidden rounded-lg border border-white/10 transition hover:scale-[1.02]"
-      style={{ aspectRatio: eventThumbAspect(imgSrc) }}
+      className="flex items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-black/25 p-1 transition hover:border-white/25"
     >
-      <Image src={imgSrc} alt={name} fill sizes="(max-width:640px) 42vw, 160px" className="object-cover" loading="lazy" />
+      {/* img natif : évite le bug Next fill + aspect-ratio qui explosait la mise en page */}
+      <img src={imgSrc} alt={name} loading="lazy" className={`h-auto w-full ${maxH} object-contain`} />
     </a>
   );
 }
@@ -37,9 +32,9 @@ function EventPhotos({ images, name }: { images: string[]; name: string }) {
   if (cartes.length > 0 && posters.length > 0) {
     return (
       <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-start">
-        <div className="flex w-full max-w-[132px] shrink-0 flex-col gap-2">
+        <div className="flex w-[7.25rem] shrink-0 flex-col gap-2">
           {cartes.map((imgSrc) => (
-            <EventThumb key={imgSrc} imgSrc={imgSrc} name={name} />
+            <EventThumb key={imgSrc} imgSrc={imgSrc} name={name} compact />
           ))}
         </div>
         <div className="grid min-w-0 flex-1 grid-cols-2 gap-2 sm:grid-cols-3">
@@ -52,7 +47,7 @@ function EventPhotos({ images, name }: { images: string[]; name: string }) {
   }
 
   return (
-    <div className="grid w-full min-w-0 grid-cols-2 gap-2">
+    <div className="grid w-full min-w-0 grid-cols-2 gap-3">
       {images.map((imgSrc) => (
         <EventThumb key={imgSrc} imgSrc={imgSrc} name={name} />
       ))}
@@ -192,7 +187,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
             <ul className="mt-3 space-y-3">
               {p.events.map((ev) => (
                 <li key={ev.name} className="min-w-0">
-                  <details className="group rounded-xl border border-white/10 bg-white/5 open:pb-0 sm:hidden">
+                  <details className="group overflow-hidden rounded-xl border border-white/10 bg-white/5 open:pb-0 sm:hidden">
                     <summary className="cursor-pointer list-none p-4 [&::-webkit-details-marker]:hidden">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
@@ -214,7 +209,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
                     </div>
                   </details>
 
-                  <div className="hidden rounded-xl border border-white/10 bg-white/5 p-4 sm:block">
+                  <div className="hidden overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4 sm:block">
                     <EventBlock ev={ev} accent={p.accent} t={t.work} />
                   </div>
                 </li>

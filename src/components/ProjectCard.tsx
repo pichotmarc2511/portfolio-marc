@@ -18,7 +18,7 @@ function eventThumbAspect(src: string): string {
 
 function EventPhotos({ images, name }: { images: string[]; name: string }) {
   return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+    <div className="grid w-full min-w-0 max-w-full grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
       {images.map((imgSrc) => (
         <a
           key={imgSrc}
@@ -72,7 +72,7 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      className="glass glow-border relative grid w-full min-w-0 max-w-full gap-8 overflow-hidden rounded-[2rem] p-4 sm:p-10 lg:grid-cols-2 lg:gap-12"
+      className="glass glow-border relative grid w-full min-w-0 max-w-full grid-cols-1 gap-8 overflow-hidden rounded-[2rem] p-4 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-12"
       style={{ ["--glow" as string]: p.accent }}
     >
       <div
@@ -144,60 +144,6 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
           ))}
         </ul>
 
-        {p.events && (
-          <div className="mt-6 w-full min-w-0">
-            <div className="text-xs font-semibold tracking-widest text-white/40 uppercase">{t.work.events}</div>
-            <ul className="mt-3 space-y-3">
-              {p.events.map((ev) => (
-                <li key={ev.name} className="min-w-0">
-                  <details className="group rounded-xl border border-white/10 bg-white/5 sm:hidden">
-                    <summary className="cursor-pointer list-none p-4 [&::-webkit-details-marker]:hidden">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <div className="text-xs font-semibold tracking-wide" style={{ color: p.accent }}>
-                            {ev.when}
-                          </div>
-                          <div className="font-display mt-0.5 text-sm font-semibold leading-snug">{ev.name}</div>
-                        </div>
-                        {ev.images && (
-                          <span className="shrink-0 rounded-full border border-white/15 px-2 py-0.5 text-[10px] text-white/55">
-                            {ev.images.length} {t.work.eventPhotos}
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-2 text-xs leading-relaxed text-white/60">{ev.detail}</p>
-                      <span className="mt-2 inline-block text-[11px] font-medium text-white/45 group-open:hidden">
-                        ▼
-                      </span>
-                      <span className="mt-2 hidden text-[11px] font-medium text-white/45 group-open:inline">
-                        ▲
-                      </span>
-                    </summary>
-                    {ev.images && (
-                      <div className="border-t border-white/10 px-4 pb-4 pt-3">
-                        <EventPhotos images={ev.images} name={ev.name} />
-                      </div>
-                    )}
-                  </details>
-
-                  <div className="hidden min-w-0 rounded-xl border border-white/10 bg-white/5 p-4 sm:block">
-                    <div className="text-xs font-semibold tracking-wide" style={{ color: p.accent }}>
-                      {ev.when}
-                    </div>
-                    <div className="font-display mt-0.5 text-sm font-semibold">{ev.name}</div>
-                    <p className="mt-1 text-xs leading-relaxed text-white/60">{ev.detail}</p>
-                    {ev.images && (
-                      <div className="mt-3">
-                        <EventPhotos images={ev.images} name={ev.name} />
-                      </div>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
         <div className="mt-6 flex flex-wrap gap-2">
           {p.stack.map((s) => (
             <span key={s} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75">
@@ -228,6 +174,56 @@ export function ProjectCard({ p, index }: { p: P; index: number }) {
           )}
         </div>
       </div>
+
+      {p.events && (
+        <div className="min-w-0 lg:col-span-2">
+          <div className="text-xs font-semibold tracking-widest text-white/40 uppercase">{t.work.events}</div>
+          <ul className="mt-3 space-y-3">
+            {p.events.map((ev) => (
+              <li key={ev.name} className="min-w-0 max-w-full">
+                <details className="group rounded-xl border border-white/10 bg-white/5 sm:hidden">
+                  <summary className="cursor-pointer list-none p-4 [&::-webkit-details-marker]:hidden">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="text-xs font-semibold tracking-wide" style={{ color: p.accent }}>
+                          {ev.when}
+                        </div>
+                        <div className="font-display mt-0.5 text-sm font-semibold leading-snug">{ev.name}</div>
+                      </div>
+                      {ev.images && (
+                        <span className="shrink-0 rounded-full border border-white/15 px-2 py-0.5 text-[10px] text-white/55">
+                          {ev.images.length} {t.work.eventPhotos}
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-2 text-xs leading-relaxed text-white/60">{ev.detail}</p>
+                    <span className="mt-2 inline-block text-[11px] font-medium text-white/45 group-open:hidden">▼</span>
+                    <span className="mt-2 hidden text-[11px] font-medium text-white/45 group-open:inline">▲</span>
+                  </summary>
+                  {ev.images && (
+                    <div className="border-t border-white/10 px-4 pb-4 pt-3">
+                      <EventPhotos images={ev.images} name={ev.name} />
+                    </div>
+                  )}
+                </details>
+
+                <div className="hidden min-w-0 max-w-full rounded-xl border border-white/10 bg-white/5 p-4 sm:block">
+                  <div className="text-xs font-semibold tracking-wide" style={{ color: p.accent }}>
+                    {ev.when}
+                  </div>
+                  <div className="font-display mt-0.5 text-sm font-semibold">{ev.name}</div>
+                  <p className="mt-1 max-w-3xl text-xs leading-relaxed text-white/60">{ev.detail}</p>
+                  {ev.images && (
+                    <div className="mt-3 max-w-full overflow-hidden">
+                      <EventPhotos images={ev.images} name={ev.name} />
+                    </div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </motion.article>
   );
 }

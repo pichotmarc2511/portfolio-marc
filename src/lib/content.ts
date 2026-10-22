@@ -41,6 +41,8 @@ export type Content = {
     problem: string;
     did: string;
     open: string;
+    expand: string;
+    collapse: string;
     events: string;
     eventPhotos: string;
   };
@@ -94,6 +96,8 @@ export const content: Record<Lang, Content> = {
       events: "Sur le terrain",
       eventPhotos: "visuels",
       open: "Voir le site",
+      expand: "Voir le détail",
+      collapse: "Réduire",
     },
     projects: [
       {
@@ -222,7 +226,7 @@ export const content: Record<Lang, Content> = {
       title: "Parlons de votre projet",
       sub: "Une idée, une application à moderniser, un poste à pourvoir ? Écrivez-moi.",
       mail: "Écrire un e-mail",
-      location: "Ciergnon, Belgique · Permis B",
+      location: "Belgique · Permis B",
     },
     footer: "Conçu et développé par Marc Pichot.",
   },
@@ -252,6 +256,8 @@ export const content: Record<Lang, Content> = {
       events: "In the field",
       eventPhotos: "visuals",
       open: "Visit site",
+      expand: "View details",
+      collapse: "Collapse",
     },
     projects: [
       {
@@ -380,7 +386,7 @@ export const content: Record<Lang, Content> = {
       title: "Let's talk about your project",
       sub: "An idea, an application to modernise, a position to fill? Write to me.",
       mail: "Send an e-mail",
-      location: "Ciergnon, Belgium · Driving licence B",
+      location: "Belgium · Driving licence B",
     },
     footer: "Designed and built by Marc Pichot.",
   },
